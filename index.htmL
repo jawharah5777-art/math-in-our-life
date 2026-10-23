@@ -1,0 +1,520 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#176b52">
+<title>الرياضيات في حياتنا</title>
+<style>
+:root {
+  --green:#176b52;
+  --light:#eaf5ef;
+  --gold:#e9b85b;
+  --ink:#24352e;
+  --muted:#66756d;
+  --white:#fff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:#f5f8f5;color:var(--ink);
+  font-family:Tahoma,Arial,sans-serif;line-height:1.8;
+}
+header{
+  background:linear-gradient(135deg,#124b3b,#218467);
+  color:white;padding:30px 18px;text-align:center;
+  border-radius:0 0 28px 28px;
+}
+header .symbol{font-size:42px}
+header h1{margin:4px 0;font-size:clamp(25px,5vw,36px)}
+header p{margin:4px 0;color:#e4f4e9}
+.wrap{max-width:950px;margin:22px auto;padding:0 14px}
+.card{
+  background:white;border:1px solid #e2ebe4;border-radius:20px;
+  padding:20px;margin-bottom:18px;box-shadow:0 5px 20px #163b2410;
+}
+h2{color:var(--green);font-size:21px;margin:0 0 14px}
+h3{margin:8px 0;color:var(--green)}
+label{display:block;font-weight:bold;margin:12px 0 5px}
+input,select{
+  width:100%;padding:12px;border:1px solid #cbd9cf;
+  border-radius:11px;background:white;font:inherit;color:var(--ink);
+}
+button{
+  border:0;border-radius:12px;padding:12px 17px;
+  font:inherit;font-weight:bold;cursor:pointer;
+  background:var(--green);color:white;
+}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary{background:var(--light);color:var(--green)}
+button.gold{background:var(--gold);color:#382a0c}
+button.danger{background:#a83232}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
+.hint{font-size:13px;color:var(--muted)}
+.badge{
+  display:inline-block;background:var(--light);color:var(--green);
+  padding:4px 10px;border-radius:30px;font-size:13px;margin:3px;
+}
+.lesson-box{background:#f5faf6;border:1px solid #dcebe0;border-radius:15px;padding:15px;margin-top:12px}
+.question{padding:14px 0;border-bottom:1px solid #e6ece7}
+.question:last-child{border-bottom:0}
+.option{
+  display:block;margin:8px 0;padding:10px;border:1px solid #d7e2da;
+  border-radius:10px;cursor:pointer;font-weight:normal;
+}
+.option:has(input:checked){background:var(--light);border-color:var(--green)}
+.option input{width:auto;margin-left:8px}
+.feedback{padding:12px;border-radius:12px;margin-top:12px}
+.success{background:#e6f6e9;color:#185d32}
+.error{background:#fff0ed;color:#8c3024}
+.stat{
+  background:#f1f8f3;border-radius:14px;text-align:center;padding:14px;
+}
+.stat strong{display:block;color:var(--green);font-size:26px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:10px;border:1px solid #dce5de;text-align:center}
+th{background:var(--light);color:var(--green)}
+footer{text-align:center;padding:22px;color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="symbol">📚 ➕ ✨</div>
+  <h1>الرياضيات في حياتنا</h1>
+  <p>نفهمها… نحسبها… نعيشها</p>
+  <p>منصة للتعلم التفاعلي والتدريب وتطبيق الرياضيات في الحياة اليومية</p>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h2>🌟 أهلًا بكِ يا بطلة الرياضيات!</h2>
+    <p>اختاري صفكِ وفصلكِ الدراسي ودرسكِ، ثم أجيبي عن الأسئلة واكتشفي نتيجتكِ.</p>
+
+    <label for="studentName">اسم الطالبة</label>
+    <input id="studentName" placeholder="اكتبي اسمكِ الكامل" autocomplete="name">
+
+    <div class="grid">
+      <div>
+        <label for="grade">الصف الدراسي</label>
+        <select id="grade">
+          <option value="2">الصف الثاني الابتدائي</option>
+          <option value="5">الصف الخامس الابتدائي</option>
+        </select>
+      </div>
+      <div>
+        <label for="semester">الفصل الدراسي</label>
+        <select id="semester">
+          <option value="1">الفصل الدراسي الأول</option>
+          <option value="2">الفصل الدراسي الثاني</option>
+        </select>
+      </div>
+      <div>
+        <label for="chapter">الفصل من الكتاب</label>
+        <select id="chapter"></select>
+      </div>
+      <div>
+        <label for="lesson">الدرس</label>
+        <select id="lesson"></select>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="startBtn">ابدئي التعلم 🚀</button>
+    </div>
+  </section>
+
+  <section id="lessonArea" class="card hidden">
+    <span class="badge" id="lessonBadge"></span>
+    <h2 id="lessonTitle"></h2>
+    <div id="lessonIntro" class="lesson-box"></div>
+    <h3>📝 اختبري فهمكِ</h3>
+    <p class="hint">اختاري إجابة واحدة لكل سؤال، ثم اضغطي على تصحيح الإجابات.</p>
+    <form id="quizForm"></form>
+    <div class="actions">
+      <button id="checkBtn" type="button">تصحيح الإجابات</button>
+      <button id="nextBtn" type="button" class="secondary hidden">اختيار درس آخر</button>
+    </div>
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2>💡 كيف أستفيد من الرياضيات؟</h2>
+    <div class="grid">
+      <div class="lesson-box">🛒 <strong>في التسوق</strong><br>نحسب الأسعار والباقي.</div>
+      <div class="lesson-box">⏰ <strong>في تنظيم الوقت</strong><br>نقرأ الساعة ونحسب المدة.</div>
+      <div class="lesson-box">🍰 <strong>في حياتنا اليومية</strong><br>نستخدم القياس والأعداد والكسور.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🔐 لوحة المعلمة</h2>
+    <p>للاطلاع على نتائج الطالبات المسجلة في هذا المتصفح.</p>
+    <label for="teacherPin">رمز الدخول</label>
+    <input id="teacherPin" type="password" inputmode="numeric" placeholder="أدخلي رمز الدخول">
+    <div class="actions">
+      <button id="loginBtn">عرض النتائج</button>
+    </div>
+    <p class="hint">رمز الدخول الأولي: 1234. غيّريه في الكود قبل نشر المنصة.</p>
+
+    <div id="dashboard" class="hidden">
+      <div class="grid">
+        <div class="stat">عدد المحاولات<strong id="attemptCount">0</strong></div>
+        <div class="stat">متوسط الدرجات<strong id="averageScore">0%</strong></div>
+        <div class="stat">عدد الطالبات<strong id="studentCount">0</strong></div>
+      </div>
+      <div class="actions">
+        <button id="exportBtn" class="gold">تصدير النتائج CSV</button>
+        <button id="refreshBtn" class="secondary">تحديث النتائج</button>
+        <button id="logoutBtn" class="secondary">إغلاق اللوحة</button>
+      </div>
+      <div class="table-wrap" style="margin-top:16px">
+        <table>
+          <thead>
+            <tr>
+              <th>اسم الطالبة</th>
+              <th>الصف</th>
+              <th>الفصل الدراسي</th>
+              <th>الفصل من الكتاب</th>
+              <th>الدرس</th>
+              <th>الدرجة</th>
+              <th>النسبة</th>
+              <th>وقت المشاركة</th>
+            </tr>
+          </thead>
+          <tbody id="resultsTable"></tbody>
+        </table>
+      </div>
+      <p class="hint">النتائج محفوظة على هذا الجهاز والمتصفح فقط في هذه النسخة.</p>
+    </div>
+  </section>
+</main>
+
+<footer>منصة الرياضيات في حياتنا 🌷<br>إعداد المعلمة: جوهره غانم</footer>
+
+<script>
+const curriculum = {
+  "2": {
+    "1": [
+      {name:"الفصل الأول: القيمة المنزلية", lessons:[
+        {name:"الآحاد والعشرات",intro:"كل عشرة آحاد تكوّن عشرة واحدة.",questions:[
+          {q:"في العدد 34، كم عدد العشرات؟",o:["3","4","34"],a:0},
+          {q:"ما قيمة الرقم 5 في العدد 52؟",o:["5","50","2"],a:1},
+          {q:"أي الأعداد يتكوّن من 6 عشرات و2 آحاد؟",o:["26","62","602"],a:1}
+        ]},
+        {name:"قراءة الأعداد وكتابتها",intro:"نقرأ العدد بحسب قيمة أرقامه ومواقعها.",questions:[
+          {q:"كيف نكتب: خمسة وعشرون؟",o:["52","25","205"],a:1},
+          {q:"ما العدد الذي يأتي بعد 49؟",o:["48","50","59"],a:1},
+          {q:"أي الأعداد أكبر؟",o:["37","73","27"],a:1}
+        ]}
+      ]},
+      {name:"الفصل الثاني: طرائق الجمع",lessons:[
+        {name:"الجمع دون إعادة التجميع",intro:"نجمع الآحاد مع الآحاد والعشرات مع العشرات.",questions:[
+          {q:"ما ناتج 23 + 14؟",o:["27","37","47"],a:1},
+          {q:"ما ناتج 32 + 6؟",o:["38","36","42"],a:0},
+          {q:"مع سارة 12 قلمًا واشترت 5، كم أصبح معها؟",o:["7","17","18"],a:1}
+        ]},
+        {name:"الجمع بإعادة التجميع",intro:"عندما يصبح مجموع الآحاد عشرة أو أكثر نعيد التجميع.",questions:[
+          {q:"ما ناتج 28 + 5؟",o:["23","32","33"],a:2},
+          {q:"ما ناتج 17 + 16؟",o:["23","33","34"],a:1},
+          {q:"ما ناتج 26 + 18؟",o:["34","44","45"],a:1}
+        ]}
+      ]},
+      {name:"الفصل الثالث: طرائق الطرح",lessons:[
+        {name:"الطرح دون إعادة التجميع",intro:"نطرح الآحاد من الآحاد والعشرات من العشرات.",questions:[
+          {q:"ما ناتج 48 - 25؟",o:["23","33","13"],a:0},
+          {q:"ما ناتج 36 - 4؟",o:["30","32","40"],a:1},
+          {q:"مع ليان 19 زهرة أعطت 7، كم بقي؟",o:["12","13","26"],a:0}
+        ]},
+        {name:"الطرح بإعادة التجميع",intro:"نعيد التجميع عندما لا تكفي الآحاد لعملية الطرح.",questions:[
+          {q:"ما ناتج 32 - 7؟",o:["25","35","24"],a:0},
+          {q:"ما ناتج 41 - 16؟",o:["35","25","26"],a:1},
+          {q:"ما ناتج 50 - 24؟",o:["34","26","24"],a:1}
+        ]}
+      ]}
+    ],
+    "2": [
+      {name:"الفصل الأول: الأعداد حتى 1000",lessons:[
+        {name:"المئات والعشرات والآحاد",intro:"يتكوّن العدد من مئات وعشرات وآحاد.",questions:[
+          {q:"كم مئة في العدد 345؟",o:["3","4","5"],a:0},
+          {q:"قيمة الرقم 7 في 274 هي؟",o:["7","70","700"],a:1},
+          {q:"أي عدد يمثّل 4 مئات و2 عشرات و6 آحاد؟",o:["246","426","624"],a:1}
+        ]},
+        {name:"مقارنة الأعداد",intro:"نقارن الأعداد بدءًا من أكبر منزلة.",questions:[
+          {q:"أيهما أكبر؟",o:["356","365","كلاهما متساوٍ"],a:1},
+          {q:"الرمز المناسب: 218 __ 281",o:[">","<","="],a:1},
+          {q:"أصغر هذه الأعداد هو؟",o:["409","490","419"],a:0}
+        ]}
+      ]},
+      {name:"الفصل الثاني: الجمع والطرح",lessons:[
+        {name:"الجمع والطرح ضمن 1000",intro:"نرتب الأعداد حسب المنازل قبل إجراء العملية.",questions:[
+          {q:"ما ناتج 120 + 230؟",o:["250","350","360"],a:1},
+          {q:"ما ناتج 500 - 170؟",o:["330","370","430"],a:0},
+          {q:"في مكتبة 240 كتابًا أضيف إليها 60، فكم كتابًا؟",o:["280","300","310"],a:1}
+        ]}
+      ]}
+    ]
+  },
+  "5": {
+    "1": [
+      {name:"الفصل الأول: القيمة المنزلية",lessons:[
+        {name:"القيمة المنزلية ضمن الملايين",intro:"تحدد منزلة الرقم قيمته في العدد.",questions:[
+          {q:"ما قيمة الرقم 7 في العدد 3,745,210؟",o:["7,000","700,000","700,000,000"],a:1},
+          {q:"أي الأعداد أكبر؟",o:["456,789","465,789","456,879"],a:1},
+          {q:"قيمة الرقم 5 في العدد 5,204,100 هي؟",o:["5,000","500,000","5,000,000"],a:2}
+        ]},
+        {name:"مقارنة الأعداد وترتيبها",intro:"نقارن الأرقام من اليسار إلى اليمين.",questions:[
+          {q:"أيهما أكبر؟",o:["82,450","82,540","متساويان"],a:1},
+          {q:"الرمز المناسب: 7,309 __ 7,390",o:[">","<","="],a:1},
+          {q:"أصغر الأعداد هو؟",o:["23,450","23,405","23,540"],a:1}
+        ]}
+      ]},
+      {name:"الفصل الثاني: الجمع والطرح",lessons:[
+        {name:"تقدير نواتج الجمع والطرح",intro:"نقرّب الأعداد إلى منزلة مناسبة لتقدير الناتج.",questions:[
+          {q:"تقدير 398 + 204 لأقرب مئة هو؟",o:["500","600","700"],a:1},
+          {q:"تقدير 792 - 310 لأقرب مئة هو؟",o:["400","500","600"],a:1},
+          {q:"أفضل تقدير لـ 51 + 48 لأقرب عشرة هو؟",o:["90","100","110"],a:1}
+        ]},
+        {name:"خصائص الجمع",intro:"من خصائص الجمع الإبدال والتجميع والعنصر المحايد.",questions:[
+          {q:"أي خاصية تمثلها 7 + 4 = 4 + 7؟",o:["الإبدال","التجميع","العنصر المحايد"],a:0},
+          {q:"ما ناتج 125 + 0؟",o:["0","125","126"],a:1},
+          {q:"أي تعبير يساوي (2 + 3) + 4؟",o:["2 + (3 + 4)","2 + 3 + 5","2 × 3 + 4"],a:0}
+        ]}
+      ]},
+      {name:"الفصل الثالث: الضرب",lessons:[
+        {name:"أنماط الضرب",intro:"يمكن الاستفادة من الأنماط لتسهيل عمليات الضرب.",questions:[
+          {q:"ما ناتج 25 × 4؟",o:["90","100","125"],a:1},
+          {q:"ما ناتج 300 × 6؟",o:["180","1,800","18,000"],a:1},
+          {q:"ما ناتج 12 × 10؟",o:["120","22","102"],a:0}
+        ]},
+        {name:"ضرب الأعداد",intro:"نستخدم حقائق الضرب والقيمة المنزلية لإيجاد الناتج.",questions:[
+          {q:"ما ناتج 24 × 3؟",o:["62","72","82"],a:1},
+          {q:"ما ناتج 125 × 8؟",o:["900","1,000","1,200"],a:1},
+          {q:"ما ناتج 46 × 10؟",o:["460","56","4,600"],a:0}
+        ]}
+      ]}
+    ],
+    "2": [
+      {name:"الفصل الأول: الكسور الاعتيادية",lessons:[
+        {name:"تمثيل الكسور ومقارنتها",intro:"يمثّل الكسر أجزاء متساوية من كلٍّ واحد.",questions:[
+          {q:"ما الكسر الذي يمثّل نصفًا؟",o:["1/2","1/3","2/3"],a:0},
+          {q:"أيهما أكبر؟",o:["1/4","3/4","متساويان"],a:1},
+          {q:"كسر مكافئ لـ 1/2 هو؟",o:["2/4","1/3","3/5"],a:0}
+        ]},
+        {name:"جمع الكسور المتشابهة",intro:"عند تساوي المقامات نجمع البسطين ونبقي المقام.",questions:[
+          {q:"ما ناتج 2/7 + 3/7؟",o:["5/7","5/14","6/7"],a:0},
+          {q:"ما ناتج 1/5 + 2/5؟",o:["3/10","3/5","2/5"],a:1},
+          {q:"ما ناتج 4/9 - 2/9؟",o:["2/9","2/18","6/9"],a:0}
+        ]}
+      ]},
+      {name:"الفصل الثاني: الأعداد العشرية",lessons:[
+        {name:"القيمة المنزلية للأعداد العشرية",intro:"الأرقام بعد الفاصلة العشرية تمثل أجزاء من الواحد.",questions:[
+          {q:"قيمة الرقم 6 في 3.64 هي؟",o:["6","0.6","0.06"],a:1},
+          {q:"أي الأعداد أكبر؟",o:["2.35","2.53","2.05"],a:1},
+          {q:"كيف نقرأ 0.7؟",o:["سبعة أعشار","سبعة أجزاء من مئة","سبعون"],a:0}
+        ]},
+        {name:"جمع الأعداد العشرية وطرحها",intro:"نرتب الفواصل العشرية تحت بعضها قبل الحساب.",questions:[
+          {q:"ما ناتج 2.5 + 1.3؟",o:["3.8","3.5","4.8"],a:0},
+          {q:"ما ناتج 5.7 - 2.2؟",o:["3.3","3.5","4.5"],a:1},
+          {q:"ما ناتج 0.4 + 0.35؟",o:["0.39","0.75","0.45"],a:1}
+        ]}
+      ]}
+    ]
+  }
+};
+
+const $ = id => document.getElementById(id);
+let currentQuestions = [];
+let submitted = false;
+
+function getChapters(){
+  return curriculum[$("grade").value][$("semester").value] || [];
+}
+function updateChapters(){
+  const chapters=getChapters();
+  $("chapter").innerHTML="";
+  chapters.forEach((c,i)=>$("chapter").add(new Option(c.name,i)));
+  updateLessons();
+}
+function updateLessons(){
+  const chapters=getChapters();
+  const c=chapters[Number($("chapter").value)] || chapters[0];
+  $("lesson").innerHTML="";
+  if(!c)return;
+  c.lessons.forEach((l,i)=>$("lesson").add(new Option(l.name,i)));
+}
+$("grade").addEventListener("change",updateChapters);
+$("semester").addEventListener("change",updateChapters);
+$("chapter").addEventListener("change",updateLessons);
+
+function startLesson(){
+  const name=$("studentName").value.trim();
+  if(!name){alert("يا بطلة، اكتبي اسمكِ أولًا.");$("studentName").focus();return;}
+  const chapters=getChapters();
+  const chapter=chapters[Number($("chapter").value)];
+  const lesson=chapter && chapter.lessons[Number($("lesson").value)];
+  if(!lesson){alert("اختاري درسًا أولًا.");return;}
+
+  currentQuestions=lesson.questions;
+  submitted=false;
+  $("lessonArea").classList.remove("hidden");
+  $("lessonBadge").textContent=
+    ($("grade").value==="2"?"الصف الثاني الابتدائي":"الصف الخامس الابتدائي")
+    +" • الفصل الدراسي "+($("semester").value==="1"?"الأول":"الثاني");
+  $("lessonTitle").textContent=lesson.name;
+  $("lessonIntro").textContent=lesson.intro;
+  $("quizForm").innerHTML="";
+
+  currentQuestions.forEach((q,i)=>{
+    const box=document.createElement("div");
+    box.className="question";
+    const title=document.createElement("strong");
+    title.textContent=(i+1)+". "+q.q;
+    box.appendChild(title);
+    q.o.forEach((option,j)=>{
+      const label=document.createElement("label");
+      label.className="option";
+      const radio=document.createElement("input");
+      radio.type="radio";radio.name="q"+i;radio.value=j;radio.required=true;
+      label.append(radio,document.createTextNode(option));
+      box.appendChild(label);
+    });
+    $("quizForm").appendChild(box);
+  });
+  $("result").innerHTML="";
+  $("checkBtn").disabled=false;
+  $("nextBtn").classList.add("hidden");
+  $("lessonArea").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("startBtn").addEventListener("click",startLesson);
+
+function loadResults(){
+  try{return JSON.parse(localStorage.getItem("mathLifeResults")||"[]");}
+  catch(e){return [];}
+}
+function saveResults(list){
+  localStorage.setItem("mathLifeResults",JSON.stringify(list));
+}
+function checkAnswers(){
+  if(submitted)return;
+  const answers=[];
+  for(let i=0;i<currentQuestions.length;i++){
+    const selected=document.querySelector('input[name="q'+i+'"]:checked');
+    if(!selected){alert("أجيبي عن جميع الأسئلة قبل التصحيح.");return;}
+    answers.push(Number(selected.value));
+  }
+  submitted=true;
+  let score=0;
+  currentQuestions.forEach((q,i)=>{
+    if(answers[i]===q.a)score++;
+    document.querySelectorAll('input[name="q'+i+'"]').forEach(input=>{
+      input.disabled=true;
+      if(Number(input.value)===q.a){
+        input.parentElement.style.borderColor="#218447";
+      }else if(input.checked){
+        input.parentElement.style.borderColor="#c44";
+      }
+    });
+  });
+  const percent=Math.round(score/currentQuestions.length*100);
+  const chapters=getChapters();
+  const chapter=chapters[Number($("chapter").value)];
+  const lesson=chapter.lessons[Number($("lesson").value)];
+  const row={
+    name:$("studentName").value.trim(),
+    grade:$("grade").value,
+    semester:$("semester").value,
+    chapter:chapter.name,
+    lesson:lesson.name,
+    score:score,
+    total:currentQuestions.length,
+    percent:percent,
+    date:new Date().toLocaleString("ar-SA")
+  };
+  const results=loadResults();
+  results.push(row);
+  saveResults(results);
+
+  const msg=percent>=80?"ممتازة يا بطلة! واصلي تألقكِ 🌟":
+    percent>=50?"أحسنتِ، راجعي الإجابات وحاولي مرة أخرى 🌷":
+    "لا تستسلمي! راجعي الدرس ثم حاولي من جديد 💪";
+  $("result").innerHTML="";
+  const resultBox=document.createElement("div");
+  resultBox.className="feedback "+(percent>=50?"success":"error");
+  const heading=document.createElement("h3");
+  heading.textContent="نتيجتكِ: "+score+" من "+currentQuestions.length+" ("+percent+"%)";
+  const text=document.createElement("p");
+  text.textContent=msg;
+  resultBox.append(heading,text);
+  $("result").appendChild(resultBox);
+  $("checkBtn").disabled=true;
+  $("nextBtn").classList.remove("hidden");
+}
+$("checkBtn").addEventListener("click",checkAnswers);
+$("nextBtn").addEventListener("click",()=>{
+  $("lessonArea").classList.add("hidden");
+  $("studentName").focus();
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+function renderDashboard(){
+  const data=loadResults();
+  $("attemptCount").textContent=data.length;
+  $("studentCount").textContent=new Set(data.map(r=>r.name)).size;
+  const avg=data.length?Math.round(data.reduce((s,r)=>s+r.percent,0)/data.length):0;
+  $("averageScore").textContent=avg+"%";
+  $("resultsTable").innerHTML="";
+  [...data].reverse().forEach(r=>{
+    const tr=document.createElement("tr");
+    const values=[
+      r.name,
+      r.grade==="2"?"الثاني":"الخامس",
+      r.semester==="1"?"الأول":"الثاني",
+      r.chapter,r.lesson,r.score+"/"+r.total,r.percent+"%",r.date
+    ];
+    values.forEach(value=>{
+      const td=document.createElement("td");
+      td.textContent=value;
+      tr.appendChild(td);
+    });
+    $("resultsTable").appendChild(tr);
+  });
+}
+$("loginBtn").addEventListener("click",()=>{
+  if($("teacherPin").value!=="1234"){
+    alert("رمز الدخول غير صحيح. تحققي من الرمز الموجود في الكود.");
+    return;
+  }
+  $("dashboard").classList.remove("hidden");
+  renderDashboard();
+});
+$("refreshBtn").addEventListener("click",renderDashboard);
+$("logoutBtn").addEventListener("click",()=>{
+  $("dashboard").classList.add("hidden");
+  $("teacherPin").value="";
+});
+$("exportBtn").addEventListener("click",()=>{
+  const data=loadResults();
+  if(!data.length){alert("لا توجد نتائج لتصديرها حتى الآن.");return;}
+  const headers=["اسم الطالبة","الصف","الفصل الدراسي","الفصل","الدرس","الدرجة","الدرجة الكاملة","النسبة","وقت المشاركة"];
+  const rows=data.map(r=>[
+    r.name,r.grade==="2"?"الثاني":"الخامس",
+    r.semester==="1"?"الأول":"الثاني",r.chapter,r.lesson,
+    r.score,r.total,r.percent+"%",r.date
+  ]);
+  const csv="\uFEFF"+[headers,...rows].map(row=>
+    row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")
+  ).join("\r\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="نتائج_الرياضيات_في_حياتنا.csv";
+  a.click();URL.revokeObjectURL(url);
+});
+
+updateChapters();
+</script>
+</body>
+</html>
