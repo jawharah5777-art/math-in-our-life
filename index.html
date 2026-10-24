@@ -189,7 +189,7 @@ footer{text-align:center;padding:22px;color:var(--muted);font-size:13px}
           <tbody id="resultsTable"></tbody>
         </table>
       </div>
-      <p class="hint">النتائج محفوظة على هذا الجهاز والمتصفح فقط في هذه النسخة.</p>
+      <p class="hint">تُحفظ النتائج محليًا، وتُرسل أيضًا إلى جدول Google Sheets المرتبط عند توفر الاتصال.</p>
     </div>
   </section>
 </main>
@@ -328,28 +328,54 @@ const curriculum = {
 };
 
 const $ = id => document.getElementById(id);
+const RESULTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrgDqH-f0KL31FRyLxF3b_943rxu3VzEqUxcxP1Hf_Ftn1lc33Ue8T9W_ZICiExT_w/exec";
 let currentQuestions = [];
 let submitted = false;
 
 function getChapters(){
-  return curriculum[$("grade").value][$("semester").value] || [];
+  const grade = $("grade").value;
+  const semester = $("semester").value;
+  const gradeData = curriculum[grade];
+  const chapters = gradeData && gradeData[semester];
+  return Array.isArray(chapters) ? chapters : [];
 }
 function updateChapters(){
-  const chapters=getChapters();
-  $("chapter").innerHTML="";
-  chapters.forEach((c,i)=>$("chapter").add(new Option(c.name,i)));
+  const chapterSelect = $("chapter");
+  const lessonSelect = $("lesson");
+  const chapters = getChapters();
+  chapterSelect.innerHTML = "";
+  lessonSelect.innerHTML = "";
+
+  if (!chapters.length) {
+    chapterSelect.add(new Option("لا توجد فصول متاحة", ""));
+    lessonSelect.add(new Option("لا توجد دروس متاحة", ""));
+    return;
+  }
+
+  chapters.forEach((chapter, index) => {
+    chapterSelect.add(new Option(chapter.name, String(index)));
+  });
   updateLessons();
 }
 function updateLessons(){
-  const chapters=getChapters();
-  const c=chapters[Number($("chapter").value)] || chapters[0];
-  $("lesson").innerHTML="";
-  if(!c)return;
-  c.lessons.forEach((l,i)=>$("lesson").add(new Option(l.name,i)));
+  const lessonSelect = $("lesson");
+  const chapters = getChapters();
+  const chapterIndex = Number($("chapter").value);
+  const chapter = chapters[chapterIndex] || chapters[0];
+  lessonSelect.innerHTML = "";
+
+  if (!chapter || !Array.isArray(chapter.lessons) || !chapter.lessons.length) {
+    lessonSelect.add(new Option("لا توجد دروس متاحة", ""));
+    return;
+  }
+
+  chapter.lessons.forEach((lesson, index) => {
+    lessonSelect.add(new Option(lesson.name, String(index)));
+  });
 }
-$("grade").addEventListener("change",updateChapters);
-$("semester").addEventListener("change",updateChapters);
-$("chapter").addEventListener("change",updateLessons);
+$("grade").addEventListener("change", updateChapters);
+$("semester").addEventListener("change", updateChapters);
+$("chapter").addEventListener("change", updateLessons);
 
 function startLesson(){
   const name=$("studentName").value.trim();
@@ -438,6 +464,17 @@ function checkAnswers(){
   const results=loadResults();
   results.push(row);
   saveResults(results);
+
+  // Send a copy of the result to the teacher's Google Sheets web app.
+  // text/plain avoids a browser CORS preflight; Apps Script parses the JSON body.
+  fetch(RESULTS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {"Content-Type": "text/plain;charset=utf-8"},
+    body: JSON.stringify(row)
+  }).catch(() => {
+    // The local copy remains saved even if the network request fails.
+  });
 
   const msg=percent>=80?"ممتازة يا بطلة! واصلي تألقكِ 🌟":
     percent>=50?"أحسنتِ، راجعي الإجابات وحاولي مرة أخرى 🌷":
